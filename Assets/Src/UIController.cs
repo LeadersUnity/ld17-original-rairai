@@ -1,0 +1,164 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class UIController : MonoBehaviour
+{
+    public Slider enemyHpSlider;//HPバー
+    public Slider enemyRedSlider;
+    public Text enemyHitValue;
+
+    public Slider playerHpSlider;//最大数から割合を算出しバーの動きを表現できる
+    public Slider playerRedSlider;
+    public Text playerHitValue;
+
+    public GameManager GameManager;
+    public Text talkText; //ログを画面に表示させる
+    public TextMeshProUGUI TarnNumText;//現在のターン
+    int TarnNum;
+    bool ToFireBool = false;
+    
+
+    public Color damageColor; //ダメージと回復でtextの色を変える
+    public Color cureColor;
+
+    float playerHp = 1000.0f;
+    float enemyHp = 1000.0f;
+    void Start()
+    {
+        playerHpSlider.maxValue = playerHp;
+        playerHpSlider.value = playerHp;
+        playerRedSlider.maxValue = playerHp;
+        playerRedSlider.value = playerHp;
+
+        enemyHpSlider.maxValue = enemyHp;
+        enemyHpSlider.value = enemyHp;
+        enemyRedSlider.maxValue = enemyHp;
+        enemyRedSlider.value = enemyHp;
+
+        TarnNum = 1;
+        ToFireBool = false;
+
+        enemyHitValue.text = "";
+        playerHitValue.text = "";
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        TarnNumText.text = TarnNum.ToString() + "tarn";
+        
+        
+    }
+    public void EnemyTakeDamageUI(float Hitdamage, bool SkillOrFire)
+    {
+        
+        float beforeHp = enemyHpSlider.value;//eX
+        //damege = 攻撃される前の体力 - 攻撃後の残り体力
+        float hp = beforeHp - Hitdamage;
+        enemyHpSlider.value = hp;//スライダーに反映
+
+
+        SetTalkText(Hitdamage + "の\nダメージを与えた！");
+
+        enemyHitValue.text = "-" + Hitdamage.ToString();//表示するダメージ「-damage」
+        enemyHitValue.color = damageColor;
+
+        StartCoroutine(EnemyRedSlider(hp, beforeHp));//eX 敵の遅い赤いバー
+        StartCoroutine(TarnToNextTien(SkillOrFire));//遅延
+
+
+    }
+    public void PlayerTakeDamageUI(float Hitdamage, bool SkillOrFire)
+    {
+        
+
+        float beforeHp = playerHpSlider.value;//pX
+        float hp = beforeHp - Hitdamage;
+        playerHpSlider.value = hp;
+
+        SetTalkText(Hitdamage + "の\nダメージを受けた！");
+
+        playerHitValue.text = "-" + Hitdamage.ToString();
+        playerHitValue.color = damageColor;
+
+        StartCoroutine(PlayerRedSlider(hp, beforeHp));//pX 遅い赤いバー
+        //StartCoroutine(TarnToNextTien(SkillOrFire));//遅延
+        
+    }
+    public void CureUI(float hp)
+    {
+        float damage = hp - playerHpSlider.value;
+        playerHpSlider.value = hp;
+        playerRedSlider.value = hp;//pX
+
+        //SetTalkText(damage + "回復した！");
+
+        playerHitValue.text = "+" + damage;
+        playerHitValue.color = cureColor;
+
+        
+    }
+    public void ToFire()
+    {
+        if (ToFireBool == true)
+        {
+
+            GameManager.TarnFire();
+            
+            //リセットkey
+
+            ToFireBool = false;
+
+        }
+    }
+    public void SetTalkText(string text)
+    {
+        talkText.text = text;
+        StartCoroutine(ResetTalkText());//ダメージ、回復テキストを一定時間で消す
+    }
+
+    IEnumerator TarnToNextTien(bool SkillOrFire2)
+    {
+        yield return new WaitForSeconds(2.0f);
+        if (SkillOrFire2 == true)
+        {
+            ToFireBool = true;//org
+            ToFire();
+        }
+    }
+
+    IEnumerator ResetTalkText()
+    {
+        yield return new WaitForSeconds(1.0f);
+        enemyHitValue.text = "";
+        playerHitValue.text = "";
+    }
+    //赤い遅いバー eX
+    IEnumerator EnemyRedSlider(float hitP, float beforeHitP)
+    {
+        yield return new WaitForSeconds(1.0f);
+        //enemyRedSlider.value = hitP;//スライダーに反映
+        for (float i = beforeHitP; i > hitP; i--)
+        {
+
+            yield return new WaitForSeconds(0.002f);
+            enemyRedSlider.value = i;//スライダーに反映
+        }
+    }
+    //pX
+    IEnumerator PlayerRedSlider(float hitP, float beforeHitP)
+    {
+        yield return new WaitForSeconds(1.0f);
+        //enemyRedSlider.value = hitP;//スライダーに反映
+        for (float i = beforeHitP; i > hitP; i--)
+        {
+
+            yield return new WaitForSeconds(0.002f);
+            playerRedSlider.value = i;//スライダーに反映
+        }
+    }
+}
