@@ -17,15 +17,26 @@ public class UIController : MonoBehaviour
     public GameManager GameManager;
     public Text talkText; //ログを画面に表示させる
     public TextMeshProUGUI TarnNumText;//現在のターン
-    int TarnNum;
-    bool ToFireBool = false;
-    
+    public static int TarnNum;
+    //bool enemySkillBool;
+    //bool playerSkillBool;
+
 
     public Color damageColor; //ダメージと回復でtextの色を変える
     public Color cureColor;
 
     float playerHp = 1000.0f;
     float enemyHp = 1000.0f;
+
+    float PlayerHitFire = 50.0f;
+    float EnemyHitFire = 50.0f;
+
+    float PlayerGardingTime = 0;
+    float EnemyGardingTime = 0;
+
+    float PlayerFireingTime = 0;
+    float EnemyFireingTime = 0;
+
     void Start()
     {
         playerHpSlider.maxValue = playerHp;
@@ -39,10 +50,10 @@ public class UIController : MonoBehaviour
         enemyRedSlider.value = enemyHp;
 
         TarnNum = 1;
-        ToFireBool = false;
 
-        enemyHitValue.text = "";
-        playerHitValue.text = "";
+        //enemySkillBool = false;
+        //playerSkillBool = false;
+
 
     }
 
@@ -53,7 +64,7 @@ public class UIController : MonoBehaviour
         
         
     }
-    public void EnemyTakeDamageUI(float Hitdamage, bool SkillOrFire)
+    public void EnemyTakeDamageUI(float Hitdamage)
     {
         
         float beforeHp = enemyHpSlider.value;//eX
@@ -68,11 +79,13 @@ public class UIController : MonoBehaviour
         enemyHitValue.color = damageColor;
 
         StartCoroutine(EnemyRedSlider(hp, beforeHp));//eX 敵の遅い赤いバー
-        StartCoroutine(TarnToNextTien(SkillOrFire));//遅延
+
+
+       // StartCoroutine(TarnToNextTien(SkillOrFire));//遅延
 
 
     }
-    public void PlayerTakeDamageUI(float Hitdamage, bool SkillOrFire)
+    public void PlayerTakeDamageUI(float Hitdamage)
     {
         
 
@@ -86,34 +99,80 @@ public class UIController : MonoBehaviour
         playerHitValue.color = damageColor;
 
         StartCoroutine(PlayerRedSlider(hp, beforeHp));//pX 遅い赤いバー
-        //StartCoroutine(TarnToNextTien(SkillOrFire));//遅延
+       
         
     }
-    public void CureUI(float hp)
+    public void PlayerCureUI(float cure)
     {
-        float damage = hp - playerHpSlider.value;
+        float hp = playerHpSlider.value + cure;
         playerHpSlider.value = hp;
         playerRedSlider.value = hp;//pX
 
         //SetTalkText(damage + "回復した！");
 
-        playerHitValue.text = "+" + damage;
+        playerHitValue.text = "+" + cure;
+        playerHitValue.color = cureColor;  
+    }
+    public void EnemyCureUI(float cure)
+    {
+        float hp = enemyHpSlider.value + cure;
+        enemyHpSlider.value = hp;
+        playerRedSlider.value = hp;//pX
+
+        //SetTalkText(damage + "回復した！");
+
+        playerHitValue.text = "+" + cure;
         playerHitValue.color = cureColor;
 
-        
+
     }
-    public void ToFire()
+    public void PlayerGardFire(int DebuffN)
     {
-        if (ToFireBool == true)
+        PlayerGardingTime += DebuffN;
+    }
+    public void EnemyGardFire(int DebuffN)
+    {
+        EnemyGardingTime += DebuffN;
+    }
+
+    public void PlayerAttackFire(int DebuffN)
+    {
+        PlayerFireingTime += DebuffN;
+    }
+    public void EnemyAttackFire(int DebuffN)
+    {
+        EnemyFireingTime += DebuffN;
+    }
+
+    //tarnFire
+    public void TarnFire()
+    {
+        PlayerHitFire = 100.0f;//プレイヤーが受ける
+        EnemyHitFire = 100.0f;//エネミーが受ける
+        if(PlayerGardingTime > 0)//プレイヤーのスキル
         {
-
-            GameManager.TarnFire();
-            
-            //リセットkey
-
-            ToFireBool = false;
-
+            PlayerHitFire -= 50.0f;//プレイヤーが受ける
+            PlayerGardingTime--;
         }
+        if(EnemyGardingTime > 0)
+        {
+            EnemyHitFire -= 50.0f;
+            EnemyGardingTime--;
+        }
+        if (PlayerFireingTime > 0)//プレイヤーのスキル
+        {
+            EnemyHitFire += 50.0f;//エネミーが受ける
+            PlayerFireingTime--;
+        }
+        if (EnemyFireingTime > 0)
+        {
+            PlayerHitFire += 50.0f;
+            EnemyFireingTime--;
+        }
+        
+        EnemyTakeDamageUI(EnemyHitFire);
+        PlayerTakeDamageUI(PlayerHitFire);
+
     }
     public void SetTalkText(string text)
     {
@@ -121,15 +180,7 @@ public class UIController : MonoBehaviour
         StartCoroutine(ResetTalkText());//ダメージ、回復テキストを一定時間で消す
     }
 
-    IEnumerator TarnToNextTien(bool SkillOrFire2)
-    {
-        yield return new WaitForSeconds(2.0f);
-        if (SkillOrFire2 == true)
-        {
-            ToFireBool = true;//org
-            ToFire();
-        }
-    }
+    
 
     IEnumerator ResetTalkText()
     {
