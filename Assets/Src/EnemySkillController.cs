@@ -5,50 +5,74 @@ using UnityEngine;
 public class EnemySkillController : MonoBehaviour
 {
     public GameManager GameManager;
-    int SkillingNum = 0;//選択されたスキルを整数で管理
     
 
+    int EnemySkillingNum = 0;//選択されたスキルを整数で管理
 
-    public GameObject SkillGardFireCard;
-    public GameObject SkillAttackFireCard;
-    public GameObject SkillDrainCard;
 
-    int EnemySkilling;
+    
+    bool EnemySkillSettioning = false;
+    public static bool EnemySkillingOK = false;
     void Start()
     {
-
+        EnemySkillSettioning = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-         if(EnemySkilling != 0)//相手情報を受け取って
+        if(EnemySkillSettioning == true)
+        {
+            if (EnemySkillingOK == true)
+            {
+                EnemySkillingNum = 3;
+                EnemySkillToGo();
+                EnemySkillingOK = false;
+                //EnemySkillSettioning = false;
+            }
+        }
+       
+         
+    }
+    //public void EnemySkillSettion(int EnemySkillingNum)
+    //{
+    //    EnemySkillSettioning = true;
+    //}
+    private void EnemySkillToGo()
+    {
+        StartCoroutine(EnemySkillTake());
+
+    }
+    IEnumerator EnemySkillTake()
+    {
+        yield return new WaitForSeconds(2.0f);
+        if (EnemySkillingNum != 0)//相手情報を受け取って
         {
             //相手情報を受け取って
-            if (SkillingNum == 1)
+            if (EnemySkillingNum == 1)
             {
                 GameManager.EnemySkillGardFire();
             }
-            else if (SkillingNum == 2)
+            else if (EnemySkillingNum == 2)
             {
                 GameManager.EnemySkillAttackFire();
             }
-            else if (SkillingNum == 3)
+            else if (EnemySkillingNum == 3)
             {
                 GameManager.EnemySkillDrain();
             }
-            else if (SkillingNum == 4)
+            else if (EnemySkillingNum == 4)
             {
                 GameManager.EnemySkillCaunter();
             }
-            else if (SkillingNum == 5)
+            else if (EnemySkillingNum == 5)
             {
                 GameManager.EnemySkillHealGard();
             }
-            SkillingNum = 0;
             
+            EnemySkillingNum = 0;
+
         }
-         
     }
+    
 }

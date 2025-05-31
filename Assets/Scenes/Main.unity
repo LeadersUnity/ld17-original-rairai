@@ -3569,6 +3569,7 @@ GameObject:
   - component: {fileID: 7739117829368771790}
   - component: {fileID: 7799394086617761076}
   - component: {fileID: 3448906039104059899}
+  - component: {fileID: 7799394086617761077}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3630,6 +3631,19 @@ MonoBehaviour:
   SkillGardFireCard: {fileID: 792123673}
   SkillAttackFireCard: {fileID: 144729435}
   SkillDrainCard: {fileID: 1963068344}
+--- !u!114 &7799394086617761077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5093136505793570674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b04a0f0b855d45eeb93dd201866bfa3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameManager: {fileID: 3448906039104059899}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

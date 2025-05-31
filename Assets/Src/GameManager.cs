@@ -6,6 +6,7 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public UIController UIController;
+    
     void Start()
     {
 
@@ -23,11 +24,13 @@ public class GameManager : MonoBehaviour
     {
         int DebuffNum = 3;
         UIController.PlayerGardFire(DebuffNum);
+        EnemySkillController.EnemySkillingOK = true;
     }
     public void SkillAttackFire()
     {
         int DebuffNum = 3;
         UIController.PlayerAttackFire(DebuffNum);
+        EnemySkillController.EnemySkillingOK = true;
     }
     public void SkillDrain()
     {
@@ -36,6 +39,7 @@ public class GameManager : MonoBehaviour
        
         UIController.EnemyTakeDamageUI(damage);
         UIController.PlayerCureUI(cureP);
+        EnemySkillController.EnemySkillingOK = true;
     }
     public void SkillCaunter()
     {
@@ -52,11 +56,13 @@ public class GameManager : MonoBehaviour
     {
         int DebuffNum = 3;
         UIController.EnemyGardFire(DebuffNum);
+        StartCoroutine(ToTarnFire());
     }
     public void EnemySkillAttackFire()
     {
         int DebuffNum = 3;
         UIController.EnemyAttackFire(DebuffNum);
+        StartCoroutine(ToTarnFire());
     }
     public void EnemySkillDrain()
     {
@@ -65,6 +71,7 @@ public class GameManager : MonoBehaviour
 
         UIController.PlayerTakeDamageUI(damage);
         UIController.EnemyCureUI(cureP);
+        StartCoroutine(ToTarnFire());
     }
     public void EnemySkillCaunter()
     {
@@ -75,6 +82,13 @@ public class GameManager : MonoBehaviour
 
     }
 
-   
+
+    IEnumerator ToTarnFire()
+    {
+        yield return new WaitForSeconds(2.0f);
+        UIController.TarnFire();
+        yield return new WaitForSeconds(2.0f);
+        UIController.WinnerOrLooserJudge();
+    }
     
 }

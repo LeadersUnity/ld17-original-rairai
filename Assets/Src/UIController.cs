@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
@@ -62,7 +63,9 @@ public class UIController : MonoBehaviour
     {
         TarnNumText.text = TarnNum.ToString() + "tarn";
         
-        
+
+
+
     }
     public void EnemyTakeDamageUI(float Hitdamage)
     {
@@ -117,15 +120,17 @@ public class UIController : MonoBehaviour
     {
         float hp = enemyHpSlider.value + cure;
         enemyHpSlider.value = hp;
-        playerRedSlider.value = hp;//pX
+        enemyRedSlider.value = hp;
 
         //SetTalkText(damage + "回復した！");
 
-        playerHitValue.text = "+" + cure;
-        playerHitValue.color = cureColor;
+        enemyHitValue.text = "+" + cure;
+        enemyHitValue.color = cureColor;
 
 
     }
+
+
     public void PlayerGardFire(int DebuffN)
     {
         PlayerGardingTime += DebuffN;
@@ -143,6 +148,7 @@ public class UIController : MonoBehaviour
     {
         EnemyFireingTime += DebuffN;
     }
+
 
     //tarnFire
     public void TarnFire()
@@ -210,6 +216,18 @@ public class UIController : MonoBehaviour
 
             yield return new WaitForSeconds(0.002f);
             playerRedSlider.value = i;//スライダーに反映
+        }
+    }
+
+    public void WinnerOrLooserJudge()
+    {
+        if (playerHpSlider.value <= 0 || enemyHpSlider.value <= 0)
+        {
+            SceneManager.LoadScene("Result", LoadSceneMode.Single);
+        }
+        else
+        {
+            TarnNum++;
         }
     }
 }

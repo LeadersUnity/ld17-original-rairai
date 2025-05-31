@@ -5,7 +5,7 @@ using UnityEngine;
 public class SkillUIManager : MonoBehaviour
 {
     public GameManager GameManager;
-    public UIController UIController;
+    
     int SkillingNum = 0;//選択されたスキルを整数で管理
     bool SkillOK = false;//スキルが完全に選択されたかを確認
 
@@ -29,27 +29,27 @@ public class SkillUIManager : MonoBehaviour
                 if(SkillingNum == 1)
                 {
                     GameManager.SkillGardFire();
-                    StartCoroutine(ToTarnFire());
+                   
                 }
                 else if (SkillingNum == 2)
                 {
                     GameManager.SkillAttackFire();
-                    StartCoroutine(ToTarnFire());
+                   
                 }
                 else if (SkillingNum == 3)
                 {
                     GameManager.SkillDrain();
-                    StartCoroutine(ToTarnFire());
+                    
                 }
                 else if (SkillingNum == 4)
                 {
                     GameManager.SkillCaunter();
-                    StartCoroutine(ToTarnFire());
+                   
                 }
                 else if (SkillingNum == 5)
                 {
                     GameManager.SkillHealGard();
-                    StartCoroutine(ToTarnFire());
+                    
                 }
                 SkillingNum = 0;
                 SkillOK = false;
@@ -85,11 +85,5 @@ public class SkillUIManager : MonoBehaviour
         SkillingNum = 5;
     }
 
-    IEnumerator ToTarnFire()
-    {
-        yield return new WaitForSeconds(2.0f);
-        UIController.TarnFire();
-        yield return new WaitForSeconds(2.0f);
-        UIController.TarnNum += 1;
-    }
+    
 }
