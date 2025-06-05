@@ -5,14 +5,14 @@ using UnityEngine;
 public class EnemySkillController : MonoBehaviour
 {
     public GameManager GameManager;
-    
+    public static bool EnemysCaunterJudege = false;
 
     int EnemySkillingNum = 0;//選択されたスキルを整数で管理
 
 
     
-    bool EnemySkillSettioning = false;
-    public static bool EnemySkillingOK = false;
+    bool EnemySkillSettioning = false;//相手のデータを受け取ったか
+    public static bool EnemySkillingOK = false;//相手のスキルの発動タイミング
     void Start()
     {
         EnemySkillSettioning = true;
@@ -23,9 +23,11 @@ public class EnemySkillController : MonoBehaviour
     {
         if(EnemySkillSettioning == true)
         {
+            EnemySkillingNum = 3;
+            
             if (EnemySkillingOK == true)
             {
-                EnemySkillingNum = 3;
+                
                 EnemySkillToGo();
                 EnemySkillingOK = false;
                 //EnemySkillSettioning = false;

@@ -47,7 +47,11 @@ public class GameManager : MonoBehaviour
     }
     public void SkillHealGard()
     {
-
+        int DebuffNum = 1;
+        float cureP = 50.0f;
+        UIController.PlayerGardFire(DebuffNum);
+        UIController.PlayerCureUI(cureP);
+        EnemySkillController.EnemySkillingOK = true;
     }
 
 
@@ -79,7 +83,10 @@ public class GameManager : MonoBehaviour
     }
     public void EnemySkillHealGard()
     {
-
+        int DebuffNum = 1;
+        float cureP = 50.0f;
+        UIController.EnemyGardFire(DebuffNum);
+        UIController.EnemyCureUI(cureP);
     }
 
 

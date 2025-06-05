@@ -8,7 +8,7 @@ public class SkillUIManager : MonoBehaviour
     
     int SkillingNum = 0;//選択されたスキルを整数で管理
     bool SkillOK = false;//スキルが完全に選択されたかを確認
-
+    
    
     public GameObject SkillGardFireCard;
     public GameObject SkillAttackFireCard;
@@ -29,27 +29,27 @@ public class SkillUIManager : MonoBehaviour
                 if(SkillingNum == 1)
                 {
                     GameManager.SkillGardFire();
-                   
+                
                 }
                 else if (SkillingNum == 2)
                 {
                     GameManager.SkillAttackFire();
-                   
+                    
                 }
                 else if (SkillingNum == 3)
                 {
                     GameManager.SkillDrain();
-                    
+               
                 }
                 else if (SkillingNum == 4)
                 {
                     GameManager.SkillCaunter();
-                   
+                
                 }
                 else if (SkillingNum == 5)
                 {
                     GameManager.SkillHealGard();
-                    
+              
                 }
                 SkillingNum = 0;
                 SkillOK = false;
