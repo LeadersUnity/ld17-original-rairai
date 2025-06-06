@@ -10,10 +10,12 @@ public class UIController : MonoBehaviour
     public Slider enemyHpSlider;//HPバー
     public Slider enemyRedSlider;
     public Text enemyHitValue;
+    public static float resultEnemyHp;
 
     public Slider playerHpSlider;//最大数から割合を算出しバーの動きを表現できる
     public Slider playerRedSlider;
     public Text playerHitValue;
+    public static float resultPlayerHp;
 
     public GameManager GameManager;
     public Text talkText; //ログを画面に表示させる
@@ -223,6 +225,8 @@ public class UIController : MonoBehaviour
     {
         if (playerHpSlider.value <= 0 || enemyHpSlider.value <= 0)
         {
+            resultEnemyHp = enemyHpSlider.value;
+            resultPlayerHp = playerHpSlider.value;
             SceneManager.LoadScene("Result", LoadSceneMode.Single);
         }
         else
