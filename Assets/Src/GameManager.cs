@@ -6,7 +6,16 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public UIController UIController;
-    
+    public PLAYUIUX PLAYUIUX;
+    public SkillUIManager SkillUIManager;
+    public EnemySkillController EnemySkillController;
+
+    public static int PlayerSkillN = 0;
+    public static int EnemySkillN = 0;
+    public static bool PlayerOpenStart = false;
+    public static bool EnemyOpenStart = false;
+
+    public static bool Stoper = true;
     void Start()
     {
 
@@ -16,7 +25,17 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
+       if(PlayerSkillN != 0 && EnemySkillN != 0 && Stoper == true)
+        {
+            Stoper = false;
+            PLAYUIUX.PlayerCardOpen(PlayerSkillN);
+            PLAYUIUX.EnemyCardOpen(EnemySkillN);
+
+            PlayerSkillN = 0;
+            EnemySkillN = 0;
+
+            OpenCardCoroutineTo();
+        }
     }
 
     //PlayerSkills
@@ -24,13 +43,13 @@ public class GameManager : MonoBehaviour
     {
         int DebuffNum = 3;
         UIController.PlayerGardFire(DebuffNum);
-        EnemySkillController.EnemySkillingOK = true;
+        EnemySkillController.EnemySkillToGo();//相手の行動へ
     }
     public void SkillAttackFire()
     {
         int DebuffNum = 3;
         UIController.PlayerAttackFire(DebuffNum);
-        EnemySkillController.EnemySkillingOK = true;
+        EnemySkillController.EnemySkillToGo();//相手の行動へ
     }
     public void SkillDrain()
     {
@@ -39,7 +58,7 @@ public class GameManager : MonoBehaviour
        
         UIController.EnemyTakeDamageUI(damage);
         UIController.PlayerCureUI(cureP);
-        EnemySkillController.EnemySkillingOK = true;
+        EnemySkillController.EnemySkillToGo();//相手の行動へ
     }
     public void SkillCaunter()
     {
@@ -51,7 +70,7 @@ public class GameManager : MonoBehaviour
         float cureP = 50.0f;
         UIController.PlayerGardFire(DebuffNum);
         UIController.PlayerCureUI(cureP);
-        EnemySkillController.EnemySkillingOK = true;
+        EnemySkillController.EnemySkillToGo();//相手の行動へ
     }
 
 
@@ -79,7 +98,7 @@ public class GameManager : MonoBehaviour
     }
     public void EnemySkillCaunter()
     {
-
+        StartCoroutine(ToTarnFire());
     }
     public void EnemySkillHealGard()
     {
@@ -87,6 +106,7 @@ public class GameManager : MonoBehaviour
         float cureP = 50.0f;
         UIController.EnemyGardFire(DebuffNum);
         UIController.EnemyCureUI(cureP);
+        StartCoroutine(ToTarnFire());
     }
 
 
@@ -97,5 +117,31 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(2.0f);
         StartCoroutine(UIController.WinnerOrLooserJudge());
     }
+    public void OpenCardCoroutineTo()
+    {
+        StartCoroutine(OpenCardTime());
+        
+    }
     
+
+    IEnumerator OpenCardTime()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        PLAYUIUX.SetPlayerReverseCard(true);
+        PLAYUIUX.SetEnemyReverseCard(true);
+
+        yield return new WaitForSeconds(1.0f);
+
+        PLAYUIUX.SetPlayerReverseCard(false);
+        PLAYUIUX.SetEnemyReverseCard(false);
+
+        yield return new WaitForSeconds(1.0f);
+
+        
+        SkillUIManager.SkillGoTo();
+        
+
+        
+    }
 }

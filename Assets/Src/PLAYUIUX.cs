@@ -18,7 +18,10 @@ public class PLAYUIUX : MonoBehaviour
     public Image CaunterEnemy;
     public Image HealGardEnemy;
 
-    
+    public Image MyReverseCard;
+    public Image EnemyReverseCard;
+
+
     void Start()
     {
         GardFireMine.gameObject.SetActive(false);
@@ -32,6 +35,9 @@ public class PLAYUIUX : MonoBehaviour
         DrainEnemy.gameObject.SetActive(false);
         CaunterEnemy.gameObject.SetActive(false);
         HealGardEnemy.gameObject.SetActive(false);
+
+        MyReverseCard.gameObject.SetActive(false);
+        EnemyReverseCard.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -100,5 +106,31 @@ public class PLAYUIUX : MonoBehaviour
         DrainEnemy.gameObject.SetActive(false);
         CaunterEnemy.gameObject.SetActive(false);
         HealGardEnemy.gameObject.SetActive(false);
+    }
+    public void SetPlayerReverseCard(bool Reversing)
+    {
+        if (Reversing == true)
+        {
+            MyReverseCard.gameObject.SetActive(true);
+            
+        }
+        if (Reversing == false)
+        {
+            MyReverseCard.gameObject.SetActive(false);
+           
+        }
+    }
+    public void SetEnemyReverseCard(bool Reversing)
+    {
+        if(Reversing == true)
+        {
+            
+            EnemyReverseCard.gameObject.SetActive(true);
+        }
+        if (Reversing == false)
+        {
+           
+            EnemyReverseCard.gameObject.SetActive(false);
+        }
     }
 }

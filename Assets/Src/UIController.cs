@@ -261,7 +261,8 @@ public class UIController : MonoBehaviour
 
             TarnNum++;
             EventNum++;
-            
+            GameManager.Stoper = true;
+            EnemySkillController.EnemySkillSettioning = true;
         }
     }
     public void RandomEvents(int RandomEventNum)

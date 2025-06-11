@@ -8,6 +8,8 @@ public class SkillUIManager : MonoBehaviour
 {
     public GameManager GameManager;
     public PLAYUIUX PLAYUIUX;
+    //public EnemySkillController EnemySkillController;
+
     int SkillingNum = 0;//選択されたスキルを整数で管理
     bool SkillOK = false;//スキルが完全に選択されたかを確認
     
@@ -134,48 +136,59 @@ public class SkillUIManager : MonoBehaviour
             if(SkillOK == true)//OKbutton
             {
                 SetActiveFalse();
-                //GameManagerに選択されたスキル情報を呼び出し
-                if (SkillingNum == 1)
-                {
-                    PLAYUIUX.PlayerCardOpen(SkillingNum);
-                    GameManager.SkillGardFire();
-                    skillCoolBool[0] = true;
-                    processing();//進行中はカードをふれられない
-                }
-                else if (SkillingNum == 2)
-                {
-                    PLAYUIUX.PlayerCardOpen(SkillingNum);
-                    GameManager.SkillAttackFire();
-                    skillCoolBool[1] = true;
-                    processing();
-                }
-                else if (SkillingNum == 3)
-                {
-                    PLAYUIUX.PlayerCardOpen(SkillingNum);
-                    GameManager.SkillDrain();
-                    skillCoolBool[2] = true;
-                    processing();
-                }
-                else if (SkillingNum == 4)
-                {
-                    PLAYUIUX.PlayerCardOpen(SkillingNum);
-                    GameManager.SkillCaunter();
-                    skillCoolBool[3] = true;
-                    processing();
-                }
-                else if (SkillingNum == 5)
-                {
-                    PLAYUIUX.PlayerCardOpen(SkillingNum);
-                    GameManager.SkillHealGard();
-                    skillCoolBool[4] = true;
-                    processing();
-                }
-                SkillingNum = 0;
+                GameManager.PlayerSkillN = SkillingNum;
+
                 SkillOK = false;
             }
         }
     }
-
+    public void SkillGoTo()
+    {
+        SkillGo(SkillingNum);
+        SkillingNum = 0;
+        
+        
+    }
+    
+    public void SkillGo(int SkillingN)
+    {
+        //GameManagerに選択されたスキル情報を呼び出し
+        if (SkillingN == 1)
+        {
+            
+            GameManager.SkillGardFire();
+            skillCoolBool[0] = true;
+            processing();//進行中はカードをふれられない
+        }
+        else if (SkillingN == 2)
+        {
+            
+            GameManager.SkillAttackFire();
+            skillCoolBool[1] = true;
+            processing();
+        }
+        else if (SkillingN == 3)
+        {
+           
+            GameManager.SkillDrain();
+            skillCoolBool[2] = true;
+            processing();
+        }
+        else if (SkillingN == 4)
+        {
+           
+            GameManager.SkillCaunter();
+            skillCoolBool[3] = true;
+            processing();
+        }
+        else if (SkillingN == 5)
+        {
+            
+            GameManager.SkillHealGard();
+            skillCoolBool[4] = true;
+            processing();
+        }
+    }
     public void SkillOKCaunter()
     {
         SkillOK = true;
