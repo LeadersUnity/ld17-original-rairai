@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(2.0f);
         UIController.TarnFire();
         yield return new WaitForSeconds(2.0f);
-        UIController.WinnerOrLooserJudge();
+        StartCoroutine(UIController.WinnerOrLooserJudge());
     }
     
 }

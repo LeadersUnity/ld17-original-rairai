@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class SkillUIManager : MonoBehaviour
 {
@@ -17,12 +18,23 @@ public class SkillUIManager : MonoBehaviour
     public Button SkillCaunterCard;
     public Button SkillHealGardCard;
 
+    public TextMeshProUGUI GardFireText;
+    public TextMeshProUGUI AttackFireText;
+    public TextMeshProUGUI DrainText;
+    public TextMeshProUGUI CaunterText;
+    public TextMeshProUGUI HealGardText;
+
+
     int AcardN=0,BcardN=0,CcardN=0;
 
     Vector3 AcardPos = new Vector3(92f, -403f, 0f);
     Vector3 BcardPos = new Vector3(298f, -403f, 0f);
     Vector3 CcardPos = new Vector3(504f, -403f, 0f);
 
+  
+    int[] skillCoolTarn = { 0, 0, 0, 0, 0 };
+    int[] skillCoolNum = { 2, 2, 1, 1, 1 };
+    bool[] skillCoolBool = { false, false, false, false, false };
     void Start()
     {
         AcardN = HomeToBattle.AcardNum;
@@ -117,27 +129,32 @@ public class SkillUIManager : MonoBehaviour
                 if(SkillingNum == 1)
                 {
                     GameManager.SkillGardFire();
-                
+                    skillCoolBool[0] = true;
+                    processing();
                 }
                 else if (SkillingNum == 2)
                 {
                     GameManager.SkillAttackFire();
-                    
+                    skillCoolBool[1] = true;
+                    processing();
                 }
                 else if (SkillingNum == 3)
                 {
                     GameManager.SkillDrain();
-               
+                    skillCoolBool[2] = true;
+                    processing();
                 }
                 else if (SkillingNum == 4)
                 {
                     GameManager.SkillCaunter();
-                
+                    skillCoolBool[3] = true;
+                    processing();
                 }
                 else if (SkillingNum == 5)
                 {
                     GameManager.SkillHealGard();
-              
+                    skillCoolBool[4] = true;
+                    processing();
                 }
                 SkillingNum = 0;
                 SkillOK = false;
@@ -148,13 +165,14 @@ public class SkillUIManager : MonoBehaviour
     public void SkillOKCaunter()
     {
         SkillOK = true;
-
+        
     }
 
     public void SkillGardFireCaunt()
     {
         
         SkillingNum = 1;
+        SkillAttackFireCard.enabled = false;
     }
     public void SkillAttackFireCaunt()
     {
@@ -173,5 +191,93 @@ public class SkillUIManager : MonoBehaviour
         SkillingNum = 5;
     }
 
-    
+    public void SkillCooling()
+    {
+        
+        for (int i=0;i<5;i++)
+        {
+            
+            if (skillCoolTarn[i] > 0)
+            {
+                skillCoolTarn[i]--;
+            }
+
+        }
+        GardFireText.text = skillCoolTarn[0].ToString();
+        AttackFireText.text = skillCoolTarn[1].ToString();
+        DrainText.text = skillCoolTarn[2].ToString();
+        CaunterText.text = skillCoolTarn[3].ToString();
+        HealGardText.text = skillCoolTarn[4].ToString();
+        for (int j = 0; j < 5; j++)
+        {
+            if (skillCoolTarn[j] == 0)
+            {
+                if (j == 0)
+                {
+                    SkillGardFireCard.enabled = true;
+                    GardFireText.text = "";
+                }
+                else if (j == 1)
+                {
+                    SkillAttackFireCard.enabled = true;
+                    AttackFireText.text = "";
+                }
+                else if (j == 2)
+                {
+                    SkillDrainCard.enabled = true;
+                    DrainText.text = "";
+                }
+                else if (j == 3)
+                {
+                    SkillCaunterCard.enabled = true;
+                    CaunterText.text = "";
+                }
+                else if (j == 4)
+                {
+                    SkillHealGardCard.enabled = true;
+                    HealGardText.text = "";
+                }
+            }
+            if (skillCoolBool[j] == true)
+            {
+                skillCoolTarn[j] += skillCoolNum[j];
+                
+                if(j==0)
+                {
+                    SkillGardFireCard.enabled = false;
+                    GardFireText.text = skillCoolTarn[j].ToString();
+                }
+                else if(j==1)
+                {
+                    SkillAttackFireCard.enabled = false;
+                    AttackFireText.text = skillCoolTarn[j].ToString();
+                }
+                else if (j == 2)
+                {
+                    SkillDrainCard.enabled = false;
+                    DrainText.text = skillCoolTarn[j].ToString();
+                }
+                else if (j == 3)
+                {
+                    SkillCaunterCard.enabled = false;
+                    CaunterText.text = skillCoolTarn[j].ToString();
+                }
+                else if (j == 4)
+                {
+                    SkillHealGardCard.enabled = false;
+                    HealGardText.text = skillCoolTarn[j].ToString();
+                }
+                skillCoolBool[j] = false;
+            }
+        }
+
+    }
+    public void processing()
+    {
+        SkillGardFireCard.enabled = false;
+        SkillAttackFireCard.enabled = false;
+        SkillDrainCard.enabled = false;
+        SkillCaunterCard.enabled = false;
+        SkillHealGardCard.enabled = false;
+    }
 }

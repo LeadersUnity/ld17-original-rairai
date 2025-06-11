@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+//using static System.Net.Mime.MediaTypeNames;
 
 public class UIController : MonoBehaviour
 {
@@ -18,9 +19,11 @@ public class UIController : MonoBehaviour
     public static float resultPlayerHp;
 
     public GameManager GameManager;
+    public SkillUIManager SkillUIManager;
     public Text talkText; //ログを画面に表示させる
     public TextMeshProUGUI TarnNumText;//現在のターン
     public static int TarnNum;
+    public static int EventNum=1;
     //bool enemySkillBool;
     //bool playerSkillBool;
 
@@ -31,8 +34,8 @@ public class UIController : MonoBehaviour
     float playerHp = 1000.0f;
     float enemyHp = 1000.0f;
 
-    float PlayerHitFire = 50.0f;
-    float EnemyHitFire = 50.0f;
+    int PlayerHitFire = 50;
+    int EnemyHitFire = 50;
 
     float PlayerGardingTime = 0;
     float EnemyGardingTime = 0;
@@ -40,6 +43,7 @@ public class UIController : MonoBehaviour
     float PlayerFireingTime = 0;
     float EnemyFireingTime = 0;
 
+    int randomFireTarnN = 0;
     void Start()
     {
         playerHpSlider.maxValue = playerHp;
@@ -155,26 +159,35 @@ public class UIController : MonoBehaviour
     //tarnFire
     public void TarnFire()
     {
-        PlayerHitFire = 100.0f;//プレイヤーが受ける
-        EnemyHitFire = 100.0f;//エネミーが受ける
+        PlayerHitFire = 100;//プレイヤーが受ける
+        EnemyHitFire = 100;//エネミーが受ける
+
+        if(randomFireTarnN > 0)//ランダムイベント
+        {
+            PlayerHitFire = Random.Range(50,201);
+            EnemyHitFire = Random.Range(50, 201);
+
+            randomFireTarnN--;
+        }
+
         if(PlayerGardingTime > 0)//プレイヤーのスキル
         {
-            PlayerHitFire -= 50.0f;//プレイヤーが受ける
+            PlayerHitFire -= 50;//プレイヤーが受ける
             PlayerGardingTime--;
         }
         if(EnemyGardingTime > 0)
         {
-            EnemyHitFire -= 50.0f;
+            EnemyHitFire -= 50;
             EnemyGardingTime--;
         }
         if (PlayerFireingTime > 0)//プレイヤーのスキル
         {
-            EnemyHitFire += 50.0f;//エネミーが受ける
+            EnemyHitFire += 50;//エネミーが受ける
             PlayerFireingTime--;
         }
         if (EnemyFireingTime > 0)
         {
-            PlayerHitFire += 50.0f;
+            PlayerHitFire += 50;
             EnemyFireingTime--;
         }
         
@@ -221,7 +234,7 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public void WinnerOrLooserJudge()
+    public IEnumerator WinnerOrLooserJudge()
     {
         if (playerHpSlider.value <= 0 || enemyHpSlider.value <= 0)
         {
@@ -231,7 +244,52 @@ public class UIController : MonoBehaviour
         }
         else
         {
+            if (EventNum == 5)//３ターン目が終えたら
+            {
+                PlayerCureUI(300f);
+                EnemyCureUI(300f);
+
+                int RandomEvent = Random.Range(1,5);
+                RandomEvents(RandomEvent);
+                EventNum = 0;
+                yield return new WaitForSeconds(1f);
+            }
+
+            SkillUIManager.SkillCooling();
+
             TarnNum++;
+            EventNum++;
+            
         }
+    }
+    public void RandomEvents(int RandomEventNum)
+    {
+        if(RandomEventNum == 1)//熱ダメージがランダムに
+        {
+            SetTalkText("イベント：熱ランダム");
+            randomFireTarnN = 5;
+            EventNum = 0;
+        }
+        else if (RandomEventNum == 2)//付与効果を全剥がし
+        {
+            SetTalkText("イベント：ロウリュウ");
+            PlayerGardingTime = 0;  
+            EnemyGardingTime = 0;
+            PlayerFireingTime = 0;
+            EnemyFireingTime = 0;
+           
+            EventNum = 0;
+        }
+        else if (RandomEventNum == 3)
+        {
+            SetTalkText("イベント：noEvent");
+            EventNum = 0;
+        }
+        else if (RandomEventNum == 4)
+        {
+            SetTalkText("イベント：noEvent");
+            EventNum = 0;
+        }
+       
     }
 }
