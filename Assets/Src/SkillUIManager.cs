@@ -7,7 +7,7 @@ using TMPro;
 public class SkillUIManager : MonoBehaviour
 {
     public GameManager GameManager;
-    
+    public PLAYUIUX PLAYUIUX;
     int SkillingNum = 0;//選択されたスキルを整数で管理
     bool SkillOK = false;//スキルが完全に選択されたかを確認
     
@@ -24,6 +24,12 @@ public class SkillUIManager : MonoBehaviour
     public TextMeshProUGUI CaunterText;
     public TextMeshProUGUI HealGardText;
 
+    public Image GardFireImage;
+    public Image AttackFireImage;
+    public Image DrainImage;
+    public Image CaunterImage;
+    public Image HealGardImage;
+
 
     int AcardN=0,BcardN=0,CcardN=0;
 
@@ -37,6 +43,8 @@ public class SkillUIManager : MonoBehaviour
     bool[] skillCoolBool = { false, false, false, false, false };
     void Start()
     {
+        SetActiveFalse();
+
         AcardN = HomeToBattle.AcardNum;
         BcardN = HomeToBattle.BcardNum;
         CcardN = HomeToBattle.CcardNum;
@@ -125,33 +133,39 @@ public class SkillUIManager : MonoBehaviour
         {
             if(SkillOK == true)//OKbutton
             {
+                SetActiveFalse();
                 //GameManagerに選択されたスキル情報を呼び出し
-                if(SkillingNum == 1)
+                if (SkillingNum == 1)
                 {
+                    PLAYUIUX.PlayerCardOpen(SkillingNum);
                     GameManager.SkillGardFire();
                     skillCoolBool[0] = true;
-                    processing();
+                    processing();//進行中はカードをふれられない
                 }
                 else if (SkillingNum == 2)
                 {
+                    PLAYUIUX.PlayerCardOpen(SkillingNum);
                     GameManager.SkillAttackFire();
                     skillCoolBool[1] = true;
                     processing();
                 }
                 else if (SkillingNum == 3)
                 {
+                    PLAYUIUX.PlayerCardOpen(SkillingNum);
                     GameManager.SkillDrain();
                     skillCoolBool[2] = true;
                     processing();
                 }
                 else if (SkillingNum == 4)
                 {
+                    PLAYUIUX.PlayerCardOpen(SkillingNum);
                     GameManager.SkillCaunter();
                     skillCoolBool[3] = true;
                     processing();
                 }
                 else if (SkillingNum == 5)
                 {
+                    PLAYUIUX.PlayerCardOpen(SkillingNum);
                     GameManager.SkillHealGard();
                     skillCoolBool[4] = true;
                     processing();
@@ -170,24 +184,33 @@ public class SkillUIManager : MonoBehaviour
 
     public void SkillGardFireCaunt()
     {
-        
+        SetActiveFalse();
+        GardFireImage.gameObject.SetActive(true);
         SkillingNum = 1;
-        SkillAttackFireCard.enabled = false;
+        
     }
     public void SkillAttackFireCaunt()
     {
+        SetActiveFalse();
+        AttackFireImage.gameObject.SetActive(true);
         SkillingNum = 2;
     }
     public void SkillDrainCaunt()
     {
+        SetActiveFalse();
+        DrainImage.gameObject.SetActive(true);
         SkillingNum = 3;
     }
     public void SkillCaunterCaunt()
     {
+        SetActiveFalse();
+        CaunterImage.gameObject.SetActive(true);
         SkillingNum = 4;
     }
     public void SkillHealGardCaunt()
     {
+        SetActiveFalse();
+        HealGardImage.gameObject.SetActive(true);
         SkillingNum = 5;
     }
 
@@ -272,12 +295,21 @@ public class SkillUIManager : MonoBehaviour
         }
 
     }
-    public void processing()
+    public void processing()//進行中はカードをふれられない
     {
         SkillGardFireCard.enabled = false;
         SkillAttackFireCard.enabled = false;
         SkillDrainCard.enabled = false;
         SkillCaunterCard.enabled = false;
         SkillHealGardCard.enabled = false;
+    }
+
+    public void SetActiveFalse()
+    {
+        GardFireImage.gameObject.SetActive(false);
+        AttackFireImage.gameObject.SetActive(false);
+        DrainImage.gameObject.SetActive(false);
+        CaunterImage.gameObject.SetActive(false);
+        HealGardImage.gameObject.SetActive(false);
     }
 }

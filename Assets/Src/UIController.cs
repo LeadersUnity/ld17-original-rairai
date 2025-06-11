@@ -20,6 +20,8 @@ public class UIController : MonoBehaviour
 
     public GameManager GameManager;
     public SkillUIManager SkillUIManager;
+    public PLAYUIUX PLAYUIUX;
+
     public Text talkText; //ログを画面に表示させる
     public TextMeshProUGUI TarnNumText;//現在のターン
     public static int TarnNum;
@@ -254,7 +256,7 @@ public class UIController : MonoBehaviour
                 EventNum = 0;
                 yield return new WaitForSeconds(1f);
             }
-
+            PLAYUIUX.SetActiveFalse();
             SkillUIManager.SkillCooling();
 
             TarnNum++;
