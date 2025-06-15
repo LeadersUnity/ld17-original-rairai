@@ -5960,6 +5960,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GameManager: {fileID: 3448906039104059899}
   PLAYUIUX: {fileID: 7799394086617761078}
+  EnemySkillController: {fileID: 7799394086617761077}
   SkillGardFireCard: {fileID: 792123675}
   SkillAttackFireCard: {fileID: 144729437}
   SkillDrainCard: {fileID: 1963068346}

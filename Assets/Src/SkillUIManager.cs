@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
-public class SkillUIManager : MonoBehaviour
+
+public class SkillUIManager : MonoBehaviourPun
 {
     public GameManager GameManager;
     public PLAYUIUX PLAYUIUX;
+    public EnemySkillController EnemySkillController;
     //public EnemySkillController EnemySkillController;
 
     int SkillingNum = 0;//選択されたスキルを整数で管理
@@ -39,7 +44,9 @@ public class SkillUIManager : MonoBehaviour
     Vector3 BcardPos = new Vector3(298f, -403f, 0f);
     Vector3 CcardPos = new Vector3(504f, -403f, 0f);
 
-  
+    Player opponent;
+
+
     int[] skillCoolTarn = { 0, 0, 0, 0, 0 };
     int[] skillCoolNum = { 2, 2, 1, 1, 1 };
     bool[] skillCoolBool = { false, false, false, false, false };
@@ -57,7 +64,11 @@ public class SkillUIManager : MonoBehaviour
         RectTransform CaunterRt = SkillCaunterCard.GetComponent<RectTransform>();
         RectTransform HealGardRt = SkillHealGardCard.GetComponent<RectTransform>();
 
-        if(AcardN != 0)
+        // 相手プレイヤーを取得
+        //opponent = PhotonNetwork.PlayerListOthers[0]; // 自分以外のプレイヤー
+        
+
+        if (AcardN != 0)
         {
             if(AcardN == 1)
             {
@@ -131,17 +142,37 @@ public class SkillUIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(SkillingNum != 0)//スキル選択
+        // opponent が未設定の場合、プレイヤーが参加済みか確認して取得
+        if (opponent == null && PhotonNetwork.PlayerListOthers.Length > 0)
+        {
+            opponent = PhotonNetwork.PlayerListOthers[0];
+            Debug.Log("Opponent を取得しました：" + opponent.NickName);
+        }
+        // opponent が null のままだったら何もしない
+        if (opponent == null) return;
+
+
+        if (SkillingNum != 0)//スキル選択
         {
             if(SkillOK == true)//OKbutton
             {
                 SetActiveFalse();
                 GameManager.PlayerSkillN = SkillingNum;
 
+                //相手に送る
+                RaiseEventOptions options = new RaiseEventOptions
+                {
+                    TargetActors = new int[] { opponent.ActorNumber }
+                };
+                PhotonNetwork.RaiseEvent(1, SkillingNum, options, SendOptions.SendReliable);
+
+
                 SkillOK = false;
             }
         }
     }
+
+
     public void SkillGoTo()
     {
         SkillGo(SkillingNum);
@@ -189,6 +220,7 @@ public class SkillUIManager : MonoBehaviour
             processing();
         }
     }
+
     public void SkillOKCaunter()
     {
         SkillOK = true;

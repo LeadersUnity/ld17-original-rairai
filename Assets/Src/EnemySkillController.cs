@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
-public class EnemySkillController : MonoBehaviour
+public class EnemySkillController : MonoBehaviourPun
 {
     public GameManager GameManager;
     public PLAYUIUX PLAYUIUX;
@@ -15,6 +18,17 @@ public class EnemySkillController : MonoBehaviour
     
     public static bool EnemySkillSettioning = false;//相手のデータを受け取ったか
     public static bool EnemySkillingOK = false;//相手のスキルの発動タイミング
+
+    void OnEnable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
+    }
+
+    void OnDisable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
+    }
+
     void Start()
     {
         EnemySkillSettioning = true;
@@ -23,20 +37,82 @@ public class EnemySkillController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(EnemySkillSettioning == true)//相手情報を受け取って
+        if(EnemySkillSettioning == true)//相手情報を受け取ったら
         {
-            EnemySkillingNum = 3;//受け取った
-            if (EnemySkillingNum != 0)//相手情報を受け取って
+            
+            if (EnemySkillingNum != 0)//相手情報を表示
             {
                 
                 GameManager.EnemySkillN = EnemySkillingNum;
                 PLAYUIUX.SetEnemyReverseCard(true);
                 EnemySkillSettioning = false;
+                
             }
         }
        
          
     }
+    //受信
+    void OnEvent(EventData photonEvent)
+    {
+        if (photonEvent.Code == 1)
+        {
+            // 受信したスキル番号を保存
+            EnemySkillingNum = (int)photonEvent.CustomData;
+            Debug.Log("相手から受信したスキル番号: " + EnemySkillingNum);
+            EnemySkillSettioning = true;
+
+            
+        }
+        else if (photonEvent.Code == 2)
+        {
+            // 受信したスキル番号を保存
+            EnemySkillingNum = (int)photonEvent.CustomData;
+            Debug.Log("相手から受信したスキル番号: " + EnemySkillingNum);
+            EnemySkillSettioning = true;
+
+
+        }
+        else if (photonEvent.Code == 3)
+        {
+            // 受信したスキル番号を保存
+            EnemySkillingNum = (int)photonEvent.CustomData;
+            Debug.Log("相手から受信したスキル番号: " + EnemySkillingNum);
+            EnemySkillSettioning = true;
+
+
+        }
+        else if (photonEvent.Code == 4)
+        {
+            // 受信したスキル番号を保存
+            EnemySkillingNum = (int)photonEvent.CustomData;
+            Debug.Log("相手から受信したスキル番号: " + EnemySkillingNum);
+            EnemySkillSettioning = true;
+
+
+        }
+        else if (photonEvent.Code == 5)
+        {
+            // 受信したスキル番号を保存
+            EnemySkillingNum = (int)photonEvent.CustomData;
+            Debug.Log("相手から受信したスキル番号: " + EnemySkillingNum);
+            EnemySkillSettioning = true;
+
+
+        }
+
+        else
+        {
+            Debug.Log("相手から受信した" + photonEvent.Code);
+        }
+        
+    }
+    public void ReceiveSkill(int skillNum)
+    {
+        Debug.Log("EnemySkillController にスキル番号 " + skillNum + " が渡されました");
+        // skillNum に応じた処理をここで実装
+    }
+
     //public void EnemySkillSettion(int EnemySkillingNum)
     //{
     //    EnemySkillSettioning = true;

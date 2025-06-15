@@ -28,7 +28,7 @@ public class OnlineMatchingSrc : MonoBehaviourPunCallbacks
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         // 入室失敗→部屋を作成（2人用）
-        RoomOptions options = new RoomOptions { MaxPlayers = 1 };
+        RoomOptions options = new RoomOptions { MaxPlayers = 2 };
         PhotonNetwork.CreateRoom(null, options, TypedLobby.Default);
     }
 
