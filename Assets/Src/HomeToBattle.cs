@@ -34,6 +34,8 @@ public class HomeToBattle : MonoBehaviour
     public Image CaunterMyCard;
     public Image HealGardMyCard;
 
+
+
     Vector3 GardFireChangePos;
     Vector3 AttackFireChangePos;
     Vector3 DrainChangePos;
@@ -79,6 +81,80 @@ public class HomeToBattle : MonoBehaviour
         CardStartPos();
         //cardの初期位置を記録して、カードセレクトでカードを入れ替えた時に戻すカードを初期位置に戻すため
 
+
+        if(SaveCard.AcardN != 0 || SaveCard.BcardN != 0 && SaveCard.CcardN != 0)
+        {
+            AcardNum = SaveCard.AcardN;
+            BcardNum = SaveCard.BcardN;
+            CcardNum = SaveCard.CcardN;
+
+            ReloadCardDeki(AcardNum, BcardNum, CcardNum);
+
+        }
+
+    }
+    void ReloadCardDeki(int Anum, int Bnum, int Cnum)//選択したカード情報を記録再生
+    {
+        switch (Anum)
+        {
+            case 1:
+                GardFireMyCard.rectTransform.anchoredPosition = new Vector2(AcardPos.x, AcardPos.y);
+                break;
+            case 2:
+                AttackFireMyCard.rectTransform.anchoredPosition = new Vector2(AcardPos.x, AcardPos.y);
+                break;
+            case 3:
+                DrainMyCard.rectTransform.anchoredPosition = new Vector2(AcardPos.x, AcardPos.y);
+                break;
+            case 4:
+                CaunterMyCard.rectTransform.anchoredPosition = new Vector2(AcardPos.x, AcardPos.y);
+                break;
+            case 5:
+                HealGardMyCard.rectTransform.anchoredPosition = new Vector2(AcardPos.x, AcardPos.y);
+                break;
+            default:
+                break;
+        }
+        switch (Bnum)
+        {
+            case 1:
+                GardFireMyCard.rectTransform.anchoredPosition = new Vector2(BcardPos.x, BcardPos.y);
+                break;
+            case 2:
+                AttackFireMyCard.rectTransform.anchoredPosition = new Vector2(BcardPos.x, BcardPos.y);
+                break;
+            case 3:
+                DrainMyCard.rectTransform.anchoredPosition = new Vector2(BcardPos.x, BcardPos.y);
+                break;
+            case 4:
+                CaunterMyCard.rectTransform.anchoredPosition = new Vector2(BcardPos.x, BcardPos.y);
+                break;
+            case 5:
+                HealGardMyCard.rectTransform.anchoredPosition = new Vector2(BcardPos.x, BcardPos.y);
+                break;
+            default:
+                break;
+        }
+        switch (Cnum)
+        {
+            case 1:
+                GardFireMyCard.rectTransform.anchoredPosition = new Vector2(CcardPos.x, CcardPos.y);
+                break;
+            case 2:
+                AttackFireMyCard.rectTransform.anchoredPosition = new Vector2(CcardPos.x, CcardPos.y);
+                break;
+            case 3:
+                DrainMyCard.rectTransform.anchoredPosition = new Vector2(CcardPos.x, CcardPos.y);
+                break;
+            case 4:
+                CaunterMyCard.rectTransform.anchoredPosition = new Vector2(CcardPos.x, CcardPos.y);
+                break;
+            case 5:
+                HealGardMyCard.rectTransform.anchoredPosition = new Vector2(CcardPos.x, CcardPos.y);
+                break;
+            default:
+                break;
+        }
     }
     void CardStartPos()
     {
@@ -134,6 +210,10 @@ public class HomeToBattle : MonoBehaviour
         DrainImage.gameObject.SetActive(false);
         CaunterImage.gameObject.SetActive(false);
         HealGardImage.gameObject.SetActive(false);
+
+        SaveCard.AcardN = AcardNum;
+        SaveCard.BcardN = BcardNum;
+        SaveCard.CcardN = CcardNum;
     }
 
     public void GardFireBtoImage()

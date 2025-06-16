@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 //using static System.Net.Mime.MediaTypeNames;
 
 public class UIController : MonoBehaviour
@@ -242,6 +243,7 @@ public class UIController : MonoBehaviour
         {
             resultEnemyHp = enemyHpSlider.value;
             resultPlayerHp = playerHpSlider.value;
+            PhotonNetwork.LeaveRoom();
             SceneManager.LoadScene("Result", LoadSceneMode.Single);
         }
         else
@@ -265,6 +267,7 @@ public class UIController : MonoBehaviour
             EnemySkillController.EnemySkillSettioning = true;
         }
     }
+
     public void RandomEvents(int RandomEventNum)
     {
         if(RandomEventNum == 1)//熱ダメージがランダムに
