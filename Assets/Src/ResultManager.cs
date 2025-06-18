@@ -10,19 +10,19 @@ public class ResultManager : MonoBehaviour
     public GameObject hikiwakeImage;
     void Start()
     {
-        if(UIController.resultEnemyHp < UIController.resultPlayerHp)
+        if(Judge.resultEnemyHp < Judge.resultPlayerHp)
         {
             winImage.gameObject.SetActive(true);
             loseImage.gameObject.SetActive(false);
             hikiwakeImage.gameObject.SetActive(false);
         }
-        else if (UIController.resultEnemyHp > UIController.resultPlayerHp)
+        else if (Judge.resultEnemyHp > Judge.resultPlayerHp)
         {
             winImage.gameObject.SetActive(false);
             loseImage.gameObject.SetActive(true);
             hikiwakeImage.gameObject.SetActive(false);
         }
-        else if (UIController.resultEnemyHp == UIController.resultPlayerHp)
+        else if (Judge.resultEnemyHp == Judge.resultPlayerHp)
         {
             winImage.gameObject.SetActive(false);
             loseImage.gameObject.SetActive(false);

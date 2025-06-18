@@ -183,6 +183,7 @@ public class SkillUIManager : MonoBehaviourPun
     
     public void SkillGo(int SkillingN)
     {
+        GameManager.PlayerSKill = SkillingN;
         //GameManagerに選択されたスキル情報を呼び出し
         if (SkillingN == 1)
         {

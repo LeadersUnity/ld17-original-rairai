@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour
     public static bool EnemyOpenStart = false;
 
     public static bool Stoper = true;
+    public static int EnemySKill = 0;
+    public static int PlayerSKill = 0;
+
     void Start()
     {
 
@@ -43,12 +46,14 @@ public class GameManager : MonoBehaviour
     {
         int DebuffNum = 3;
         UIController.PlayerGardFire(DebuffNum);
+        
         EnemySkillController.EnemySkillToGo();//相手の行動へ
     }
     public void SkillAttackFire()
     {
         int DebuffNum = 3;
         UIController.PlayerAttackFire(DebuffNum);
+        
         EnemySkillController.EnemySkillToGo();//相手の行動へ
     }
     public void SkillDrain()
@@ -58,11 +63,26 @@ public class GameManager : MonoBehaviour
        
         UIController.EnemyTakeDamageUI(damage);
         UIController.PlayerCureUI(cureP);
+        
         EnemySkillController.EnemySkillToGo();//相手の行動へ
     }
     public void SkillCaunter()
     {
+        if(EnemySKill == 2 || EnemySKill == 3)//fire drain
+        {
+            UIController.EnemyTakeDamageUI(200.0f);
 
+        }
+        else if(EnemySKill == 1 || EnemySKill == 4 || EnemySKill == 5)
+        {
+            UIController.PlayerTakeDamageUI(50.0f);
+        }
+        else
+        {
+            Debug.Log("CaunterBUG");
+        }
+        
+        EnemySkillController.EnemySkillToGo();//相手の行動へ
     }
     public void SkillHealGard()
     {
@@ -70,6 +90,7 @@ public class GameManager : MonoBehaviour
         float cureP = 50.0f;
         UIController.PlayerGardFire(DebuffNum);
         UIController.PlayerCureUI(cureP);
+       
         EnemySkillController.EnemySkillToGo();//相手の行動へ
     }
 
@@ -79,12 +100,14 @@ public class GameManager : MonoBehaviour
     {
         int DebuffNum = 3;
         UIController.EnemyGardFire(DebuffNum);
+       
         StartCoroutine(ToTarnFire());
     }
     public void EnemySkillAttackFire()
     {
         int DebuffNum = 3;
         UIController.EnemyAttackFire(DebuffNum);
+        
         StartCoroutine(ToTarnFire());
     }
     public void EnemySkillDrain()
@@ -94,10 +117,27 @@ public class GameManager : MonoBehaviour
 
         UIController.PlayerTakeDamageUI(damage);
         UIController.EnemyCureUI(cureP);
+       
         StartCoroutine(ToTarnFire());
     }
     public void EnemySkillCaunter()
     {
+        if (PlayerSKill == 2 || PlayerSKill == 3)//fire drain
+        {
+            UIController.PlayerTakeDamageUI(200.0f);
+
+        }
+        else if (PlayerSKill == 1 || PlayerSKill == 4 || PlayerSKill == 5)
+        {
+            
+            UIController.EnemyTakeDamageUI(50.0f);
+        }
+        else
+        {
+            Debug.Log("CaunterBUG");
+        }
+
+        
         StartCoroutine(ToTarnFire());
     }
     public void EnemySkillHealGard()
@@ -106,6 +146,7 @@ public class GameManager : MonoBehaviour
         float cureP = 50.0f;
         UIController.EnemyGardFire(DebuffNum);
         UIController.EnemyCureUI(cureP);
+        
         StartCoroutine(ToTarnFire());
     }
 
