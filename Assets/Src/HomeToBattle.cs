@@ -173,7 +173,12 @@ public class HomeToBattle : MonoBehaviour
     }
     public void LoadBattle()
     {
-        SceneManager.LoadScene("Main", LoadSceneMode.Single);
+        Debug.Log(AcardNum + BcardNum + CcardNum);
+        if(AcardNum != 0 && BcardNum != 0 && CcardNum != 0)
+        {
+            SceneManager.LoadScene("Main", LoadSceneMode.Single);
+        }
+       
     }
 
     public void CardToSectionButton()

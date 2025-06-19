@@ -17,7 +17,18 @@ public class OnlineMatchingSrc : MonoBehaviourPunCallbacks
 
     public void OnMatchingButton()
     {
-        PhotonNetwork.ConnectUsingSettings(); // サーバー接続
+        Debug.Log(HomeToBattle.AcardNum + HomeToBattle.BcardNum + HomeToBattle.CcardNum);
+        if (HomeToBattle.AcardNum != 0 && HomeToBattle.BcardNum != 0 && HomeToBattle.CcardNum != 0)
+        {
+            if (PhotonNetwork.IsConnectedAndReady)
+            {
+                PhotonNetwork.JoinRandomRoom();
+            }
+            else
+            {
+                PhotonNetwork.ConnectUsingSettings(); // まだ未接続なら接続
+            }
+        }
     }
 
     public override void OnConnectedToMaster()

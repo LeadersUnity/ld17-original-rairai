@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
        if(PlayerSkillN != 0 && EnemySkillN != 0 && Stoper == true)
         {
             Stoper = false;
-            PLAYUIUX.PlayerCardOpen(PlayerSkillN);
+            
             PLAYUIUX.EnemyCardOpen(EnemySkillN);
 
             PlayerSkillN = 0;
@@ -68,9 +68,10 @@ public class GameManager : MonoBehaviour
     }
     public void SkillCaunter()
     {
+        Debug.Log("vvv:" + EnemySKill);
         if(EnemySKill == 2 || EnemySKill == 3)//fire drain
         {
-            UIController.EnemyTakeDamageUI(200.0f);
+            UIController.EnemyTakeDamageUI(150.0f);
 
         }
         else if(EnemySKill == 1 || EnemySKill == 4 || EnemySKill == 5)
@@ -124,7 +125,7 @@ public class GameManager : MonoBehaviour
     {
         if (PlayerSKill == 2 || PlayerSKill == 3)//fire drain
         {
-            UIController.PlayerTakeDamageUI(200.0f);
+            UIController.PlayerTakeDamageUI(150.0f);
 
         }
         else if (PlayerSKill == 1 || PlayerSKill == 4 || PlayerSKill == 5)

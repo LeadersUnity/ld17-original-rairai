@@ -33,6 +33,8 @@ public class UIController : MonoBehaviourPunCallbacks
     public static int TarnNum;
     public static int EventNum = 1;
 
+    public Image EventUI1;
+    public Image EventUI2;
     const byte EVENT_RANDOM_EVENT = 100; // イベント発生用
 
     //bool enemySkillBool;
@@ -55,6 +57,9 @@ public class UIController : MonoBehaviourPunCallbacks
     float EnemyFireingTime = 0;
 
     int randomFireTarnN = 0;
+
+    int PcurePlus = 0;
+    int EcurePlus = 0;
     void Start()
     {
         playerHpSlider.maxValue = playerHp;
@@ -68,6 +73,9 @@ public class UIController : MonoBehaviourPunCallbacks
         enemyRedSlider.value = enemyHp;
 
         TarnNum = 1;
+        
+        EventUI1.gameObject.SetActive(false);
+        EventUI2.gameObject.SetActive(false);
 
         //enemySkillBool = false;
         //playerSkillBool = false;
@@ -127,9 +135,16 @@ public class UIController : MonoBehaviourPunCallbacks
     public void PlayerCureUI(float cure)
     {
         float hp = playerHpSlider.value + cure;
+
+         if(hp > 1000)
+        {
+            PcurePlus += (int)hp - 1000;
+        }
+
         playerHpSlider.value = hp;
         playerRedSlider.value = hp;//pX
 
+       
         //SetTalkText(damage + "回復した！");
 
         playerHitValue.text = "+" + cure;
@@ -138,6 +153,10 @@ public class UIController : MonoBehaviourPunCallbacks
     public void EnemyCureUI(float cure)
     {
         float hp = enemyHpSlider.value + cure;
+        if(hp > 1000)
+        {
+            EcurePlus += (int)hp - 1000;
+        }
         enemyHpSlider.value = hp;
         enemyRedSlider.value = hp;
 
@@ -220,6 +239,37 @@ public class UIController : MonoBehaviourPunCallbacks
             EnemyFireingTime--;
         }
 
+        if(PcurePlus > 0)
+        {
+            if(PlayerHitFire < PcurePlus)
+            {
+               PcurePlus -= PlayerHitFire;
+               PlayerHitFire = 0;
+               
+            }
+            else if(PlayerHitFire >= PcurePlus)
+            {
+               PlayerHitFire = PlayerHitFire - PcurePlus;
+               PcurePlus = 0;
+            }
+            
+        }
+        if(EcurePlus > 0)
+        {
+            if(EnemyHitFire < EcurePlus)
+            {
+               EcurePlus -= EnemyHitFire;
+               EnemyHitFire = 0;
+               
+            }
+            else if(EnemyHitFire >= EcurePlus)
+            {
+               EnemyHitFire = EnemyHitFire - EcurePlus;
+               EcurePlus = 0;
+            }
+            
+        }
+
         EnemyTakeDamageUI(EnemyHitFire);
         PlayerTakeDamageUI(PlayerHitFire);
 
@@ -270,11 +320,14 @@ public class UIController : MonoBehaviourPunCallbacks
             Judge.resultEnemyHp = enemyHpSlider.value;
             Judge.resultPlayerHp = playerHpSlider.value;
             PhotonNetwork.LeaveRoom();
+            yield return new WaitForSeconds(1f);
+            SceneManager.LoadScene("Result", LoadSceneMode.Single);
+            
             
         }
         else
         {
-            if (EventNum == 5)//３ターン目が終えたら
+            if (EventNum == 5)//5ターン目が終えたら
             {
                 
 
@@ -298,14 +351,16 @@ public class UIController : MonoBehaviourPunCallbacks
     }
     public override void OnLeftRoom()
     {
-        SceneManager.LoadScene("Result", LoadSceneMode.Single);
+        Debug.Log("ルームを離脱しました。結果画面に遷移します");
+        
     }
+
     public void RandomEvents()
     {
 
         if (PhotonNetwork.IsMasterClient)
         {
-            int randomEventNum = Random.Range(1, 2); // 1〜3のイベント
+            int randomEventNum = Random.Range(1, 3); // 1〜3のイベント
             PhotonNetwork.RaiseEvent(EVENT_RANDOM_EVENT, randomEventNum, new RaiseEventOptions
             {
                 Receivers = ReceiverGroup.All
@@ -330,6 +385,9 @@ public class UIController : MonoBehaviourPunCallbacks
 
     void OnEvent(EventData photonEvent)
     {
+        if(SceneManager.GetActiveScene().name == "Result") return;
+         // ★ GameManager や UIController が消えてる可能性をケア
+        
         if (photonEvent.Code == EVENT_RANDOM_EVENT)
         {
             int eventNum = (int)photonEvent.CustomData;
@@ -366,10 +424,12 @@ public class UIController : MonoBehaviourPunCallbacks
 
     void HandleEvent(int eventNum)
     {
+        StartCoroutine(EventUI(eventNum));
         PlayerCureUI(200f);
         EnemyCureUI(200f);
         if (eventNum == 1)//熱ダメージがランダムに
         {
+
             SetTalkText("イベント：熱ランダム");
             randomFireTarnN = 5;
             EventNum = 0;
@@ -391,5 +451,20 @@ public class UIController : MonoBehaviourPunCallbacks
         }
     }
 
+    IEnumerator EventUI(int eventN)
+    {
+        if(eventN == 1)
+        {
+            EventUI1.gameObject.SetActive(true);
+            yield return new WaitForSeconds(1.5f);
+            EventUI1.gameObject.SetActive(false);
+        }
+        else if(eventN == 2)
+        {
+            EventUI2.gameObject.SetActive(true);
+            yield return new WaitForSeconds(1.5f);
+            EventUI2.gameObject.SetActive(false);
+        }
+    }
 
 }

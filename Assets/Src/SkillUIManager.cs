@@ -158,6 +158,7 @@ public class SkillUIManager : MonoBehaviourPun
             {
                 SetActiveFalse();
                 GameManager.PlayerSkillN = SkillingNum;
+                PLAYUIUX.PlayerCardOpen(SkillingNum);
 
                 //相手に送る
                 RaiseEventOptions options = new RaiseEventOptions

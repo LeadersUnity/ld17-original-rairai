@@ -55,7 +55,15 @@ public class EnemySkillController : MonoBehaviourPun
     //受信
     void OnEvent(EventData photonEvent)
     {
-        GameManager.EnemySKill = photonEvent.Code;
+       
+
+       
+
+        if (GameManager != null)
+        {
+            GameManager.EnemySKill = (int)photonEvent.CustomData;
+        }
+
         if (photonEvent.Code == 1)
         {
             // 受信したスキル番号を保存
