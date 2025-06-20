@@ -27,6 +27,7 @@ public class UIController : MonoBehaviourPunCallbacks
     public GameManager GameManager;
     public SkillUIManager SkillUIManager;
     public PLAYUIUX PLAYUIUX;
+    public BattleSEbg BattleSEbg;
 
     public Text talkText; //ログを画面に表示させる
     public TextMeshProUGUI TarnNumText;//現在のターン
@@ -35,6 +36,10 @@ public class UIController : MonoBehaviourPunCallbacks
 
     public Image EventUI1;
     public Image EventUI2;
+    public Image PfireHuyo;
+    public Image EfireHuyo;
+    public Image PgardHuyo;
+    public Image EgardHuyo;
     const byte EVENT_RANDOM_EVENT = 100; // イベント発生用
 
     //bool enemySkillBool;
@@ -77,6 +82,10 @@ public class UIController : MonoBehaviourPunCallbacks
         EventUI1.gameObject.SetActive(false);
         EventUI2.gameObject.SetActive(false);
 
+        PfireHuyo.gameObject.SetActive(false);
+        EfireHuyo.gameObject.SetActive(false);
+        PgardHuyo.gameObject.SetActive(false);
+        EgardHuyo.gameObject.SetActive(false);
         //enemySkillBool = false;
         //playerSkillBool = false;
 
@@ -103,7 +112,7 @@ public class UIController : MonoBehaviourPunCallbacks
         enemyHpSlider.value = hp;//スライダーに反映
 
 
-        SetTalkText(Hitdamage + "の\nダメージを与えた！");
+        BattleSEbg.damageSE();
 
         enemyHitValue.text = "-" + Hitdamage.ToString();//表示するダメージ「-damage」
         enemyHitValue.color = damageColor;
@@ -123,7 +132,7 @@ public class UIController : MonoBehaviourPunCallbacks
         float hp = beforeHp - Hitdamage;
         playerHpSlider.value = hp;
 
-        SetTalkText(Hitdamage + "の\nダメージを受けた！");
+        BattleSEbg.damageSE();
 
         playerHitValue.text = "-" + Hitdamage.ToString();
         playerHitValue.color = damageColor;
@@ -141,6 +150,8 @@ public class UIController : MonoBehaviourPunCallbacks
             PcurePlus += (int)hp - 1000;
         }
 
+        BattleSEbg.healSE();
+
         playerHpSlider.value = hp;
         playerRedSlider.value = hp;//pX
 
@@ -157,6 +168,9 @@ public class UIController : MonoBehaviourPunCallbacks
         {
             EcurePlus += (int)hp - 1000;
         }
+
+        BattleSEbg.healSE();
+
         enemyHpSlider.value = hp;
         enemyRedSlider.value = hp;
 
@@ -171,20 +185,28 @@ public class UIController : MonoBehaviourPunCallbacks
 
     public void PlayerGardFire(int DebuffN)
     {
+        BattleSEbg.gardSE();
         PlayerGardingTime += DebuffN;
+        PgardHuyo.gameObject.SetActive(true);
     }
     public void EnemyGardFire(int DebuffN)
     {
+        BattleSEbg.gardSE();
         EnemyGardingTime += DebuffN;
+        EgardHuyo.gameObject.SetActive(true);
     }
 
     public void PlayerAttackFire(int DebuffN)
     {
+        BattleSEbg.fireSE();
         PlayerFireingTime += DebuffN;
+        EfireHuyo.gameObject.SetActive(true);
     }
     public void EnemyAttackFire(int DebuffN)
     {
+        BattleSEbg.fireSE();
         EnemyFireingTime += DebuffN;
+        PfireHuyo.gameObject.SetActive(true);
     }
 
 
@@ -193,7 +215,7 @@ public class UIController : MonoBehaviourPunCallbacks
     {
         PlayerHitFire = 100;//プレイヤーが受ける
         EnemyHitFire = 100;//エネミーが受ける
-
+        SetTalkText("熱ダメージ発生");
         if (randomFireTarnN > 0)//ランダムイベント
         {
             if (PhotonNetwork.IsMasterClient)
@@ -208,35 +230,50 @@ public class UIController : MonoBehaviourPunCallbacks
                     Receivers = ReceiverGroup.All
                 }, SendOptions.SendReliable);
             }
-            else
-            {
-                int hako = EnemyHitFire;
-                EnemyHitFire = PlayerHitFire;
-                PlayerHitFire = hako;
-            }
+            
 
             randomFireTarnN--;
         }
+
 
         if (PlayerGardingTime > 0)//プレイヤーのスキル
         {
             PlayerHitFire -= 50;//プレイヤーが受ける
             PlayerGardingTime--;
         }
+        if(PlayerGardingTime <= 0)
+        {
+            PgardHuyo.gameObject.SetActive(false);
+        }
+
         if (EnemyGardingTime > 0)
         {
             EnemyHitFire -= 50;
             EnemyGardingTime--;
         }
+        if (EnemyGardingTime <= 0)
+        {
+            EgardHuyo.gameObject.SetActive(false);
+        }
+
         if (PlayerFireingTime > 0)//プレイヤーのスキル
         {
             EnemyHitFire += 50;//エネミーが受ける
             PlayerFireingTime--;
         }
+        if (PlayerFireingTime <= 0)//プレイヤーのスキル
+        {
+            EfireHuyo.gameObject.SetActive(false);
+        }
+
         if (EnemyFireingTime > 0)
         {
             PlayerHitFire += 50;
             EnemyFireingTime--;
+        }
+        if (EnemyFireingTime <= 0)
+        {
+            PfireHuyo.gameObject.SetActive(false);
         }
 
         if(PcurePlus > 0)
@@ -272,7 +309,8 @@ public class UIController : MonoBehaviourPunCallbacks
 
         EnemyTakeDamageUI(EnemyHitFire);
         PlayerTakeDamageUI(PlayerHitFire);
-
+        
+        
     }
     public void SetTalkText(string text)
     {
@@ -308,7 +346,7 @@ public class UIController : MonoBehaviourPunCallbacks
         for (float i = beforeHitP; i > hitP; i--)
         {
 
-            yield return new WaitForSeconds(0.002f);
+            yield return new WaitForSeconds(0.001f);
             playerRedSlider.value = i;//スライダーに反映
         }
     }
@@ -329,8 +367,6 @@ public class UIController : MonoBehaviourPunCallbacks
         {
             if (EventNum == 5)//5ターン目が終えたら
             {
-                
-
 
                 RandomEvents();
                 EventNum = 0;
@@ -456,13 +492,13 @@ public class UIController : MonoBehaviourPunCallbacks
         if(eventN == 1)
         {
             EventUI1.gameObject.SetActive(true);
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(1.8f);
             EventUI1.gameObject.SetActive(false);
         }
         else if(eventN == 2)
         {
             EventUI2.gameObject.SetActive(true);
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(1.8f);
             EventUI2.gameObject.SetActive(false);
         }
     }

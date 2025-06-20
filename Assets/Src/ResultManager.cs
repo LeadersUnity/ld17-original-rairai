@@ -8,8 +8,15 @@ public class ResultManager : MonoBehaviour
     public GameObject winImage;
     public GameObject loseImage;
     public GameObject hikiwakeImage;
+
+    public AudioSource Resultbgm;
+    public AudioClip bgmClip;
     void Start()
     {
+        Resultbgm.clip = bgmClip;
+        Resultbgm.loop = true;
+        Resultbgm.Play();
+
         if(Judge.resultEnemyHp < Judge.resultPlayerHp)
         {
             winImage.gameObject.SetActive(true);

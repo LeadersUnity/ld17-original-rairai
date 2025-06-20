@@ -9,6 +9,7 @@ public class EnemySkillController : MonoBehaviourPun
 {
     public GameManager GameManager;
     public PLAYUIUX PLAYUIUX;
+    public UIController UIController;
 
     public static bool EnemysCaunterJudege = false;
 
@@ -137,6 +138,7 @@ public class EnemySkillController : MonoBehaviourPun
         
         yield return new WaitForSeconds(2.0f);
         
+        UIController.SetTalkText("Enemyのターン");
             //相手情報を受け取って
             if (EnemySkillingNum == 1)
             {

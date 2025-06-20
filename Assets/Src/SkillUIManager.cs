@@ -12,6 +12,7 @@ public class SkillUIManager : MonoBehaviourPun
 {
     public GameManager GameManager;
     public PLAYUIUX PLAYUIUX;
+    public UIController UIController;
     public EnemySkillController EnemySkillController;
     //public EnemySkillController EnemySkillController;
 
@@ -185,6 +186,7 @@ public class SkillUIManager : MonoBehaviourPun
     public void SkillGo(int SkillingN)
     {
         GameManager.PlayerSKill = SkillingN;
+        UIController.SetTalkText("Playerのターン");
         //GameManagerに選択されたスキル情報を呼び出し
         if (SkillingN == 1)
         {

@@ -34,7 +34,8 @@ public class HomeToBattle : MonoBehaviour
     public Image CaunterMyCard;
     public Image HealGardMyCard;
 
-
+    public AudioSource HomeBgm;
+    public AudioClip HomeBgmClip;
 
     Vector3 GardFireChangePos;
     Vector3 AttackFireChangePos;
@@ -56,7 +57,11 @@ public class HomeToBattle : MonoBehaviour
     int beforeCcardN = 0;
     void Start()
     {
-        
+
+        HomeBgm.clip = HomeBgmClip;
+        HomeBgm.loop = true;
+        HomeBgm.Play();
+
         CardSelectReturnHomeB.gameObject.SetActive(false);
         CardSelectBack.gameObject.SetActive(false);
 
